@@ -1,0 +1,145 @@
+<%- include('../front/common/header') %>
+<main class="main-wrapper">
+          <!-- Start Cart Area  -->
+          <div class="axil-product-cart-area axil-section-gap">
+              <div class="container">
+                  <div class="axil-product-cart-wrap">
+                      <div class="product-table-heading">
+                          <h4 class="title">Your Cart</h4>
+                          <a href="#" class="cart-clear">Clear Shoping Cart</a>
+                      </div>
+                      <div class="table-responsive">
+                          <table class="table axil-product-table axil-cart-table mb--40">
+                              <thead>
+                                  <tr>
+                                      <th scope="col" class="product-remove"></th>
+                                      <th scope="col" class="product-thumbnail">Product</th>
+                                      <th scope="col" class="product-title"></th>
+                                      <th scope="col" class="product-price">Price</th>
+                                      <th scope="col" class="product-quantity">Quantity</th>
+                                      <th scope="col" class="product-subtotal">Subtotal</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                <% product_data.forEach((data) => { %>
+                                    <tr>
+                                        <form action="/front/delete_cart/<%= data._id %>"method="post">
+                                        <td class="product-remove"><button type="submit"><i class="fal fa-times"></i></button></td></form>
+                                        <td class="product-thumbnail">
+                                            <a href="single-product.html">
+                                                <img src="/<%= data.images[0] %>" alt="Digital Product">
+                                            </a>
+                                        </td>
+                                        <td class="product-title"><a href="single-product.html"><%= data.name %></a></td>
+                                        <td class="product-price" data-title="Price"><span class="currency-symbol">$</span><%= data.price %></td>
+                                        <td class="product-quantity">
+                                            <form class="update-quantity-form" action="/front/update_quantity/<%= data.cartItemId %>" method="post">
+                                                <button type="button" class="quantity-btn minus-btn">-</button>
+                                                <input type="number" class="quantity-input" name="quantity" value="<%= data.quantity %>" readonly>
+                                                <button type="button" class="quantity-btn plus-btn">+</button>
+                                            </form>
+                                        </td>
+                                        
+                                        
+                                        <td class="product-subtotal" data-title="Subtotal"><span class="currency-symbol">$</span><%= data.price*data.quantity %></td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                            
+                          </table>
+                      </div>
+                      
+                      <div class="row">
+                          <div class="col-xl-5 col-lg-7 offset-xl-7 offset-lg-5">
+                              <div class="axil-order-summery mt--80">
+                                  <h5 class="title mb--20">Order Summary</h5>
+                                  <div class="summery-table-wrap">
+                                      <table class="table summery-table mb--30">
+                                          <tbody>
+                                              <tr class="order-subtotal">
+                                                  <td>Subtotal</td>
+                                                  <td><%=cartTotal%></td>
+                                              </tr>
+                                              <tr class="order-shipping">
+                                                  <td>Shipping</td>
+                                                  <td>
+                                                      <div class="input-group">
+                                                          <input type="radio" id="radio1" name="shipping" checked>
+                                                          <label for="radio1">Free Shippping</label>
+                                                      </div>
+                                                      <div class="input-group">
+                                                          <input type="radio" id="radio2" name="shipping">
+                                                          <label for="radio2">Local: $35.00</label>
+                                                      </div>
+                                                      <div class="input-group">
+                                                          <input type="radio" id="radio3" name="shipping">
+                                                          <label for="radio3">Flat rate: $12.00</label>
+                                                      </div>
+                                                  </td>
+                                              </tr>
+                                              <tr class="order-tax">
+                                                  <td>State Tax</td>
+                                                  <td>$8.00</td>
+                                              </tr>
+                                              <tr class="order-total">
+                                                  <td>Total</td>
+                                                  <td class="order-total-amount"><%=cartTotal%></td>
+                                              </tr>
+                                          </tbody>
+                                      </table>
+                                  </div>
+                                  <a href="/front/view_address" class="axil-btn btn-bg-primary checkout-btn">Process to Checkout</a>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- End Cart Area  -->
+          <script>
+          document.querySelectorAll('.quantity-btn').forEach(button => {
+            button.addEventListener('click', async event => {
+                const isPlus = button.classList.contains('plus-btn');
+                const input = button.parentNode.querySelector('.quantity-input');
+                let newQuantity = parseInt(input.value);
+        
+                if (isPlus) {
+                    newQuantity += 1;
+                } else {
+                    newQuantity = newQuantity > 1 ? newQuantity - 1 : 1;
+                }
+        
+                input.value = newQuantity;
+        
+                const form = button.closest('.update-quantity-form');
+                const action = form.getAttribute('action');
+                const formData = new FormData(form);
+                formData.set('quantity', newQuantity);
+        
+                // Debugging: Log form data to ensure it includes 'quantity'
+                console.log('Form Data:', new URLSearchParams(formData).toString());
+        
+                try {
+                    const response = await fetch(action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams(formData).toString()
+                    });
+        
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+        
+                    const result = await response.json();
+                    window.location.reload();
+                    console.log('Quantity updated:', result);
+                } catch (error) {
+                    console.error('Error updating quantity:', error);
+                }
+            });
+        });
+    </script>        
+      </main>
+      <%- include('../front/common/footer') %> 

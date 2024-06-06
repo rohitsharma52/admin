@@ -1,0 +1,82 @@
+<%- include('../common/header') %>
+<div class="pc-container">
+          <div class="pc-content">
+            <!-- [ breadcrumb ] start -->
+            <div class="page-header">
+              <div class="page-block">
+                <div class="row align-items-center">
+                  <div class="col-md-12">
+                    <ul class="breadcrumb">
+                      <li class="breadcrumb-item"><a href="index.html">View Product</a></li>
+                      <li class="breadcrumb-item"><a href="javascript: void(0)">View Product</a></li>
+                      <li class="breadcrumb-item" aria-current="page">View Product</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="page-header-title">
+                      <h2 class="mb-0">View Product</h2>
+                    </div>
+                  </div>
+                  <% if (success_msg) { %>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      <%= success_msg %>
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+            <h4 class="mt-0 header-title">View Product</h4>
+            <hr style="margin-bottom: 50px;background-color: darkgrey;">
+            <div class="container mt-5">
+                    <div class="row">
+                              <div class="col-md-2"> <a class="btn btn-info cticket" href="/admin/add_product" role="button" style="margin-left: 20px;"> Add Product</a></div>
+                            </div>
+                            <hr style="margin-bottom: 50px;background-color: darkgrey;">
+                            <div class="table-rep-plugin">
+                              <div class="table-responsive b-0" data-pattern="priority-columns">
+                                <table id="userTable" class="table  table-striped">
+                                  <thead>
+                                    <tr>
+                                      <th>#</th>
+                                      <th data-priority="1">Name</th>
+                                      <th data-priority="1">Price</th>
+                                      <th data-priority="1">image 1</th>
+                                      <th data-priority="1">image 2</th>
+                                      <th data-priority="1">image 3</th>
+                                      <th data-priority="1">image 4</th>
+                                      <th data-priority="1">Description</th>
+                                      <th data-priority="6">Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                        <% let a = 1; %> <!-- Initialize counter variable -->
+                                        <% response.forEach(function(data) { %>
+                                          <tr>
+                                            <td><%= a %></td> <!-- Display counter variable -->
+                                            <td><%= data.name %></td>
+                                            <td><%= data.price %></td>
+                                            <% data.images.forEach(function(image) { %>
+                                                  <td>
+                                                    <img id="slide_img_path" height="100" width="100" src="/<%= image %>">
+                                                  </td>
+                                                <% }); %>
+                                        <td><%= data.description %></td>
+                                            <td style="display:flex;margin-top: 2rem;">
+                                        <form action="/admin/delete_product/<%= data._id%>"method="post">
+                                        <button type="submit"class="btn btn-danger me-4 ">delete</button>
+                                        </form>
+                                        <a href="/admin/update_product/<%= data._id%>" class="btn btn-info">update</a>
+                                            </td> 
+                                          </tr>
+                                          <% a++; %> <!-- Increment counter variable -->
+                                        <% }); %>
+                                      </tbody>
+                                      
+                                </table>
+                              </div>
+                            </div>   
+                </div>
+          </div>
+        </div>
+        <%- include('../common/footer')%>       

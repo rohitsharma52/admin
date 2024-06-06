@@ -1,0 +1,43 @@
+<%- include('../front/common/header') %>
+<div class="container mt-5">
+          <h2 class="mb-4">Add your Address</h2>
+          <form action="/front/add_address"method="post">
+              <div class="row">
+                  <div class="form-group col-md-6">
+                      <label for="first-name">First Name <span>*</span></label>
+                      <input type="text" name="name"class="form-control" id="first-name" placeholder="First Name"required >
+                  </div>
+                  
+              </div>
+              <div class="row">
+                    <div class="form-group col-md-6">
+                  <label for="phone">Phone <span>*</span></label>
+                  <input type="tel" class="form-control" id="phone" placeholder="Phone"name="phone"required >
+              </div>
+              <div class="form-group col-md-6">
+                    <label for="pincode">Pincode <span>*</span></label>
+                    <input type="text" class="form-control" id="pincode" placeholder="Pincode"name="pincode"required >
+                </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="city">City <span>*</span></label>
+                        <input type="text" class="form-control" id="city" placeholder="City"name="city"required >
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="state">State <span>*</span></label>
+                        <input type="text" class="form-control" id="state" placeholder="State"name="state"required >
+                    </div>
+                </div>
+              <div class="form-group">
+                  <label for="address">Address <span>*</span></label>
+                  <input type="text" name="address" class="form-control mb-2" id="address1" placeholder="House number and street name"required >
+              </div>
+              <div class="form-group col-md-4 text-center">
+                    <button type="submit" class="btn btn-primary py-3"style="font-size:25px;">Submit</button>
+              </div>
+            
+          </form>
+      </div>
+  
+<%- include('../front/common/footer') %> 

@@ -1,0 +1,97 @@
+<%- include('../common/header') %>
+<div class="pc-container">
+          <div class="pc-content">
+            <!-- [ breadcrumb ] start -->
+            <div class="page-header">
+              <div class="page-block">
+                <div class="row align-items-center">
+                  <div class="col-md-12">
+                    <ul class="breadcrumb">
+                      <li class="breadcrumb-item"><a href="index.html">Update Product</a></li>
+                      <li class="breadcrumb-item"><a href="javascript: void(0)">Update Product</a></li>
+                      <li class="breadcrumb-item" aria-current="page">Update Product</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="page-header-title">
+                      <h2 class="mb-0">Update Product</h2>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h4 class="mt-0 header-title">Update Product Form</h4>
+            <hr style="margin-bottom: 50px;background-color: darkgrey;">
+            <div class="container mt-5">
+                    <form action="/admin/update_product/<%=response._id%>" method="post" enctype="multipart/form-data">
+                        <div class="row mt-5">
+                            <div class="form-group col-md-6">
+                                <label for="name">Name <span style="color:red;">*</span></label>
+                                <input type="text" class="form-control" id="name" name="name" value="<%=response.name%>" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                              <label for="name">Price <span style="color:red;">*</span></label>
+                              <input type="text" class="form-control" id="name" name="price"value="<%=response.price%>" required>
+                          </div>
+                          </div>
+                            <div class="row mt-5">
+                              <div class="existing-images">
+                                        <% response.images.forEach(function(image) { %>
+                                          <img src="/<%= image %>" alt="Existing Image" width="100">
+                                        <% }); %>
+                                      </div>
+                              <div class="form-group col-md-12">
+                              <label for="images">Upload Images:</label><br>
+                                        <input type="file" id="images" name="images" accept="image/*" multiple required><br><br>
+                                    </div>
+                              </div>
+                              
+                               <div class="row mt-5">
+                                        <div class="form-group col-md-12">
+                                                  <label for="name">Description <span style="color:red;">*</span></label>
+                                                  <input type="text" class="form-control" id="name" name="description"value="<%=response.description%>" required>
+                                        </div>          
+                               </div>
+                               <div class="row mt-5">
+                                        <div class="form-group col-md-6">
+                                            <label for="exploreProduct">Explore Product:</label><br>
+                                            <input type="radio" id="exploreYes" name="exploreProduct" value="1" <% if (response.exploreProduct === '1') { %> checked <% } %>>
+                                            <label for="exploreYes">Yes</label><br>
+                                            <input type="radio" id="exploreNo" name="exploreProduct" value="2" <% if (response.exploreProduct === '2') { %> checked <% } %>>
+                                            <label for="exploreNo">No</label><br><br>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="weekly_dealis">Weekly Deals:</label><br>
+                                            <input type="radio" id="weeklyYes" name="weekly_dealis" value="1" <% if (response.weekly_dealis === '1') { %> checked <% } %>>
+                                            <label for="weeklyYes">Yes</label><br>
+                                            <input type="radio" id="weeklyNo" name="weekly_dealis" value="2" <% if (response.weekly_dealis === '2') { %> checked <% } %>>
+                                            <label for="weeklyNo">No</label><br><br>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-5">
+                                        <div class="form-group col-md-6">
+                                            <label for="best_dealis">Best Deals:</label><br>
+                                            <input type="radio" id="bestYes" name="best_dealis" value="1" <% if (response.best_dealis === '1') { %> checked <% } %>>
+                                            <label for="bestYes">Yes</label><br>
+                                            <input type="radio" id="bestNo" name="best_dealis" value="2" <% if (response.best_dealis === '2') { %> checked <% } %>>
+                                            <label for="bestNo">No</label><br><br>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="mega_collection">Mega Collection:</label><br>
+                                            <input type="radio" id="megaYes" name="mega_collection" value="1" <% if (response.mega_collection === '1') { %> checked <% } %>>
+                                            <label for="megaYes">Yes</label><br>
+                                            <input type="radio" id="megaNo" name="mega_collection" value="2" <% if (response.mega_collection === '2') { %> checked <% } %>>
+                                            <label for="megaNo">No</label><br><br>
+                                        </div>
+                                    </div>
+                                        
+                                    
+                        <div class="form-group mt-5">
+                            <button type="submit" class="btn btn-primary" style="float: right;">Submit</button>
+                        </div>
+                    </form>
+                </div>
+          </div>
+        </div>
+        <%- include('../common/footer')%>       
+

@@ -1,0 +1,103 @@
+<%- include('../front/common/header') %>
+<main class="main-wrapper">
+          <!-- Start Checkout Area  -->
+          <div class="axil-checkout-area axil-section-gap">
+              <div class="container">
+                  <form action="#">
+                      <div class="row">
+                          <div class="col-lg-12">
+                              <div class="axil-order-summery order-checkout-summery">
+                                  <h5 class="title mb--20">Your Address</h5>
+                                  <div class="summery-table-wrap">
+                                      <table class="table summery-table">
+                                          <thead>
+                                              <tr>
+                                                <th>Name</th>
+                                                <th>Phone</th>
+                                                <th>Pincode</th>
+                                                <th>City</th>
+                                                <th>State</th>
+                                                <th>Address</th>
+                                              </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr>
+                                            <td><%=add_data.name%></td>
+                                            <td><%=add_data.phone%></td>
+                                            <td><%=add_data.pincode%></td>
+                                            <td><%=add_data.city%></td>
+                                            <td><%=add_data.state%></td>
+                                            <td><%=add_data.address%></td>
+                                            </tr>
+                                            
+                                          </tbody>
+                                      </table>
+                                  </div>
+                                  </div>
+                              </div>
+                              <div class="col-lg-12">
+                                        <div class="axil-order-summery order-checkout-summery">
+                                            <h5 class="title mb--20">Your Order</h5>
+                                            <div class="summery-table-wrap">
+                                                <table class="table summery-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Product</th>
+                                                            <th>Subtotal</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                       <%  product_data.forEach((order)=>{      %>
+                                                        <tr class="order-product">
+                                                            <td><%=order.name%> <span class="quantity">x<%=order.quantity%></span></td>
+                                                            <td><%=order.price*order.quantity%></td>
+                                                        </tr>
+                                                        <% }) %>
+                                                        <tr class="order-total">
+                                                            <td>Total</td>
+                                                            <td class="order-total-amount"><%=cartTotal%></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                   
+                                              
+                                          
+                                        </form>
+                                        <form action="/front/order_1"method="post">
+                                                  <input type="hidden" name="address_id" value="<%= add_data._id %>">
+                                                  <input type="hidden" name="total_ammount" value="<%= cartTotal %>">
+
+                                                   <input type="hidden"name="product_ids" value="">
+                                                   <input type="hidden"name="quantity" value="">
+                                                  <div class="order-payment-method">
+                                                      <div class="single-payment">
+                                                          <div class="input-group">
+                                                              <input type="radio" id="radio4" name="payment" value="1" required>
+                                                              <label for="radio4">Direct bank transfer</label>
+                                                          </div>
+                                                      </div>
+                                                      <div class="single-payment">
+                                                          <div class="input-group">
+                                                              <input type="radio" id="radio5" name="payment" value="2" required>
+                                                              <label for="radio5">Cash on delivery</label>
+                                                          </div>
+                                                          <p>Pay with cash upon delivery.</p>
+                                                      </div>
+                                                  </div>
+                                          
+                                                  <button type="submit" class="axil-btn btn-bg-primary checkout-btn">Process to Checkout</button>
+                                              </form>
+                                          
+                                        </div>
+                                    </div>
+                          </div>
+                      </div>
+              </div>
+          </div>
+          <!-- End Checkout Area  -->
+
+         
+  
+      </main>
+      <%- include('../front/common/footer') %> 
