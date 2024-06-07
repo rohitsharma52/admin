@@ -7,21 +7,20 @@ const passport=require('passport');
 const flash = require('connect-flash');
 
 const LocalStrategy = require('passport-local').Strategy;
-passport.use('local-admin',new LocalStrategy(async (username, password, done) => {
+passport.use('local-admin', new LocalStrategy(async (username, password, done) => {
   try {
-    // Use await to handle the asynchronous query
-    const user = await Login.findOne({ username: username }).exec();
-    if (!user) {
-      return done(null, false, { message: 'username not found' });
+    const admin = await Login.findOne({ username: username }).exec();
+    if (!admin) {
+      return done(null, false, { message: 'Username not found' });
     }
-    
-    // Compare the provided password with the stored hashed password
-    const isMatch = await bcrypt.compare(password, user.password);
+
+    const isMatch = await bcrypt.compare(password, admin.password);
     if (!isMatch) {
       return done(null, false, { message: 'Incorrect password' });
     }
-    
-    return done(null, user);
+
+    admin.type = 'admin'; // Add a type property
+    return done(null, admin);
   } catch (error) {
     console.error(error);
     return done(error);
@@ -31,37 +30,39 @@ passport.use('local-user', new LocalStrategy(async (username, password, done) =>
   try {
     const user = await Register.findOne({ email: username }).exec();
     if (!user) {
-      return done(null, false, { message: 'email not found' });
+      return done(null, false, { message: 'Email not found' });
     }
-    
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return done(null, false, { message: 'Incorrect password' });
     }
-    
+    user.type = 'user'; // Add a type property
     return done(null, user);
   } catch (error) {
     console.error(error);
     return done(error);
   }
 }));
-
 passport.serializeUser((user, done) => {
-  
-    done(null, user.id);
-  
- 
+  done(null, { id: user.id, type: user.type });
 });
 
-// Deserialize User
-passport.deserializeUser(async (id, done) => {
+passport.deserializeUser(async (obj, done) => {
   try {
-    const user = await Login.findById(id);
+    let user;
+    if (obj.type === 'admin') {
+      user = await Login.findById(obj.id).exec();
+    } else {
+      user = await Register.findById(obj.id).exec();
+    }
     done(null, user);
   } catch (err) {
     done(err);
   }
 });
+
+
 function isAuthenticated(req, res, next) {
           if (req.isAuthenticated()) {
             return next();

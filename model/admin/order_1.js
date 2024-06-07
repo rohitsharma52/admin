@@ -4,6 +4,10 @@ const order_1Schema=new mongoose.Schema({
           type: String,
           required: true,
           },
+          user_id:{
+          type: String,
+          required: true,
+          },
           payment:{
           type: String,
           required: true,

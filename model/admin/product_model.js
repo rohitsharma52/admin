@@ -22,20 +22,24 @@ const productSchema=new mongoose.Schema({
           },
           exploreProduct:{
           type: String,
-          required: true,
+          default: null
           },
           weekly_dealis:{
           type: String,
-          required: true,
+          default: null
           },
           best_dealis:{
           type: String,
-          required: true,
+          default: null
           },
           mega_collection:{
           type: String,
-          required: true,
+          default: null
           },
+          liked_product: {
+          type: Boolean,
+          default: null
+}
 });
 
 const Product = mongoose.model('Product', productSchema);

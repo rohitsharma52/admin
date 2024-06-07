@@ -23,7 +23,11 @@ const addressSchema=new mongoose.Schema({
           address:{
           type: String,
           required: true,
-          },   
+          },
+          user_id:{
+          type: String,
+          required: true,
+          },    
 });
 
 const Address = mongoose.model('Address', addressSchema);

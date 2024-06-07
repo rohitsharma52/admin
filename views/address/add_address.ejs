@@ -2,6 +2,7 @@
 <div class="container mt-5">
           <h2 class="mb-4">Add your Address</h2>
           <form action="/front/add_address"method="post">
+            <input type="hidden"name="user_id"value="<%=user_id%>">
               <div class="row">
                   <div class="form-group col-md-6">
                       <label for="first-name">First Name <span>*</span></label>

@@ -65,6 +65,7 @@
                                           
                                         </form>
                                         <form action="/front/order_1"method="post">
+                                                <input type="hidden" name="user_id"value="<%=user_id%>">
                                                   <input type="hidden" name="address_id" value="<%= add_data._id %>">
                                                   <input type="hidden" name="total_ammount" value="<%= cartTotal %>">
 

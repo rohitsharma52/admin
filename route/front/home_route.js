@@ -124,7 +124,7 @@ router.post('/login', (req, res, next) => {
       req.logIn(user, (err) => {
         if (err) { return next(err); }
         req.flash('success_msg', 'You are now logged in');
-        return res.redirect('/front/check_out')
+        return res.redirect('/front/view_address')
       });
     })(req, res, next);
   });
@@ -151,9 +151,10 @@ router.get('/product_details/:id',auth.cart_count,async(req,res)=>{
     res.status(500).send('Internal Server Error');
 }
 });
-router.get('/view_address',auth.cart_count,async(req,res)=>{
+router.get('/view_address',auth.cart_count,auth.islogin,async(req,res)=>{
+  const user_id=req.user.id 
 try{
-const add_data=await Address.find().exec()
+const add_data=await Address.find({user_id:user_id}).exec()
 res.render('front/view_address',{add_data:add_data})
 }
 catch (err) {
@@ -161,8 +162,10 @@ catch (err) {
     res.status(500).send('Internal Server Error');
 }
 });
-router.get('/add_address',auth.cart_count,(req,res)=>{
-res.render('address/add_address')
+router.get('/add_address',auth.cart_count,auth.islogin,(req,res)=>{
+  user_id=req.user.id
+  
+res.render('address/add_address',{user_id:user_id})
 });
 router.post('/add_address',async(req,res)=>{
   try{
@@ -176,8 +179,9 @@ router.post('/add_address',async(req,res)=>{
     res.status(500).send('Internal Server Error');
 }
 });
-router.get('/checkout/:id',auth.cart_count,async(req,res)=>{
+router.get('/checkout/:id',auth.cart_count,auth.islogin,async(req,res)=>{
   const id=req.params.id
+  const user_id=req.user.id
   try{
     const add_data=await Address.findOne({_id:id})
     const cart_data = await Cart.find().exec();
@@ -200,7 +204,7 @@ router.get('/checkout/:id',auth.cart_count,async(req,res)=>{
         console.warn(`Product with ID ${data.product_id} not found`);
       }
     }
-res.render('front/checkout',{add_data:add_data,product_data,cartTotal})
+res.render('front/checkout',{add_data:add_data,product_data,cartTotal,user_id:user_id})
   }
   catch (err) {
     console.error(err);
@@ -219,6 +223,26 @@ catch (err) {
   console.error(err);
   res.status(500).send('Internal Server Error');
 }
-})
+});
+router.get('/my_account',auth.cart_count,auth.islogin,async(req,res)=>{
+  const user_id=req.user.id
+  try{
+    const user_data= await Register.findOne({_id:user_id})
+    res.render('front/my_account',{user_data:user_data})
 
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+})
+router.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.redirect('/');
+    }
+    res.clearCookie('connect.sid'); // This may vary depending on your session cookie name
+    res.redirect('/front/login');
+  });
+});
 module.exports=router;
