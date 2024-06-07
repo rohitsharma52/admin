@@ -90,16 +90,49 @@ function isAuthenticated(req, res, next) {
         };
      const cart_count=async(req,res,next)=>{
       try {
-        const cart_data = await Cart.find().exec();
-        res.locals.cart_count = cart_data.length; 
+        if (req.session.cart) {
+          res.locals.cart_count = req.session.cart.length;
+        } else {
+          res.locals.cart_count = 0;
+        }
         next();
     } catch (err) {
         console.error(err);
         res.locals.cart_count = 0; 
         next();
     }
-     }   
+     };   
+     const addToCart = async (req, res, next) => {
+      console.log('good job');
+      try {
+        const userId = req.user._id;
         
+        // Loop through each product in session cart
+        for (const cartItem of req.session.cart) {
+          // Create a new instance of CartItem
+          const newCartItem = new Cart({
+            user_id: userId,
+            product_id: cartItem.product_id,
+            quantity: cartItem.quantity
+          });
+          await newCartItem.save();
+        }
+        
+        // Clear session data
+        req.session.cart = [];
+        
+        next();
+      } catch (error) {
+        // Handle error
+        console.error('Error adding to cart:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+    };
+    
+
+
+
+
 module.exports={
-          isAuthenticated,LocalStrategy,fetchSliderData,cart_count,islogin
+          isAuthenticated,LocalStrategy,fetchSliderData,cart_count,islogin,addToCart
 }        

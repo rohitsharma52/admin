@@ -8,6 +8,9 @@ const Register=require('../../model/admin/login_model.js')
 const passport=require('passport');
 const Address=require('../../model/admin/address_model.js')
 const Order_1=require('../../model/admin/order_1.js')
+const Order_2=require('../../model/admin/order2_model.js')
+const mongoose = require('mongoose');
+
 
 router.get('/index',auth.cart_count,async(req,res)=>{
 try{
@@ -44,11 +47,16 @@ router.get('/shop/:id?',auth.cart_count,async(req,res)=>{
 });
 router.post('/cart_data',async(req,res)=>{
 try{
-const get_data=req.body
-const set_data=new Cart(get_data)
-const response=await set_data.save()
-req.flash('success_msg', 'Your Product cart sucessfull');
-res.redirect('/front/shop')
+  if (!Array.isArray(req.session.cart)) {
+    req.session.cart = [];
+  }
+  const newCartItem = {
+    product_id: req.body.product_id,
+    quantity: req.body.quantity
+  };
+  req.session.cart.push(newCartItem);
+  req.flash('success_msg', 'Your product has been added to the cart successfully');
+  res.redirect('/front/shop');
 }
 catch (err) {
     console.error(err);
@@ -57,7 +65,7 @@ catch (err) {
 });
 router.get('/cart',auth.cart_count,async (req, res) => {
     try {
-        const cart_data = await Cart.find().exec();
+        const cart_data = req.session.cart
         const product_data = [];
         let cartTotal = 0;
       
@@ -83,17 +91,19 @@ router.get('/cart',auth.cart_count,async (req, res) => {
       }
       
 });
-router.post('/delete_cart/:id',async(req,res)=>{
-    const id=req.params.id
-try{
-  const response=await Cart.findOneAndDelete({product_id:id})
-  req.flash('success_msg', 'Your Product delete sucessfull');
-   res.redirect('/front/cart')
-}
-catch (err) {
+router.post('/delete_cart/:id', (req, res) => {
+  const productId = req.params.id;
+  try {
+    if (!Array.isArray(req.session.cart)) {
+      req.session.cart = [];
+    }
+    req.session.cart = req.session.cart.filter(item => item.product_id !== productId);
+    req.flash('success_msg', 'Product removed from cart successfully');
+    res.redirect('/front/cart');
+  } catch (err) {
     console.error(err);
     res.status(500).send('Internal Server Error');
-}
+  }
 });
 router.get('/login',(req,res)=>{
 res.render('front/login')
@@ -128,18 +138,31 @@ router.post('/login', (req, res, next) => {
       });
     })(req, res, next);
   });
-  router.post('/update_quantity/:id', async (req, res) => {
-    const id = req.params.id;
+  router.post('/update_quantity/:id', (req, res) => {
+    const productId = req.params.id;
     const { quantity } = req.body;
     const quantityNumber = Number(quantity);
+  
     try {
-        const updatedCart = await Cart.findByIdAndUpdate(id, { quantity: quantityNumber }, { new: true });
-        res.json({ success: true, data: updatedCart });
+      // Ensure req.session.cart is initialized
+      if (!Array.isArray(req.session.cart)) {
+        req.session.cart = [];
+      }
+  
+      // Find the product in the cart and update its quantity
+      const cartItem = req.session.cart.find(item => item.product_id === productId);
+      if (cartItem) {
+        cartItem.quantity = quantityNumber;
+        res.json({ success: true, data: cartItem });
+      } else {
+        res.status(404).json({ success: false, message: 'Product not found in cart' });
+      }
     } catch (err) {
-        console.error(err);
-        res.status(500).send('Internal Server Error');
+      console.error(err);
+      res.status(500).send('Internal Server Error');
     }
-});
+  });
+  
 router.get('/product_details/:id',auth.cart_count,async(req,res)=>{
     const id= req.params.id
   try{
@@ -151,7 +174,7 @@ router.get('/product_details/:id',auth.cart_count,async(req,res)=>{
     res.status(500).send('Internal Server Error');
 }
 });
-router.get('/view_address',auth.cart_count,auth.islogin,async(req,res)=>{
+router.get('/view_address',auth.cart_count,auth.islogin,auth.addToCart,async(req,res)=>{
   const user_id=req.user.id 
 try{
 const add_data=await Address.find({user_id:user_id}).exec()
@@ -211,18 +234,34 @@ res.render('front/checkout',{add_data:add_data,product_data,cartTotal,user_id:us
     res.status(500).send('Internal Server Error');
 }
 });
-router.post('/order_1',async(req,res)=>{
-  console.log('hello work here')
-try{
-const get_data=req.body
-const set_data=new Order_1(get_data)
-const response= await set_data.save()
-res.redirect('/front/index')
-}
-catch (err) {
-  console.error(err);
-  res.status(500).send('Internal Server Error');
-}
+router.post('/order_1', async (req, res) => {
+  try {
+    const { user_id, address_id, total_ammount, payment, product_ids, quantity } = req.body;
+
+    // Step 1: Order_1 me insert karna
+    const newOrder1 = new Order_1({
+      user_id: user_id,
+      address_id: address_id,
+      total_ammount: total_ammount,
+      payment: payment,
+    });
+
+    const savedOrder1 = await newOrder1.save();
+
+    // Step 2: Order_2 me insert karna
+    const order2Entries = product_ids.map((productId, index) => ({
+      orderId: savedOrder1._id,
+      productId: productId,
+      quantity: quantity[index],
+    }));
+
+    await Order_2.insertMany(order2Entries);
+    req.flash('success_msg', 'your order comfirm');
+    res.redirect('/front/index');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
 });
 router.get('/my_account',auth.cart_count,auth.islogin,async(req,res)=>{
   const user_id=req.user.id

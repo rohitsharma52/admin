@@ -65,6 +65,10 @@
                                           
                                         </form>
                                         <form action="/front/order_1"method="post">
+                                            <% product_data.forEach((ids)=>{ %>
+                                          <input type="hidden"name="product_ids[]"value="<%=ids._id%>">
+                                          <input type="hidden"name="quantity[]"value="<%=ids.quantity%>">
+                                             <%})%>
                                                 <input type="hidden" name="user_id"value="<%=user_id%>">
                                                   <input type="hidden" name="address_id" value="<%= add_data._id %>">
                                                   <input type="hidden" name="total_ammount" value="<%= cartTotal %>">

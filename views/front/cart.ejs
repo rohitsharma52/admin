@@ -33,7 +33,7 @@
                                         <td class="product-title"><a href="single-product.html"><%= data.name %></a></td>
                                         <td class="product-price" data-title="Price"><span class="currency-symbol">$</span><%= data.price %></td>
                                         <td class="product-quantity">
-                                            <form class="update-quantity-form" action="/front/update_quantity/<%= data.cartItemId %>" method="post">
+                                            <form class="update-quantity-form" action="/front/update_quantity/<%= data._id %>" method="post">
                                                 <button type="button" class="quantity-btn minus-btn">-</button>
                                                 <input type="number" class="quantity-input" name="quantity" value="<%= data.quantity %>" readonly>
                                                 <button type="button" class="quantity-btn plus-btn">+</button>

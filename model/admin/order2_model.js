@@ -1,18 +1,19 @@
 const mongoose = require('mongoose');
-const cartSchema=new mongoose.Schema({
-          product_id:{
+const order_2Schema=new mongoose.Schema({
+          orderId:{
           type: String,
           required: true,
           },
-          user_id:{
+          productId:{
           type: String,
           required: true,
           },
           quantity:{
           type: String,
           required: true,
-          },  
+          }, 
+           
 });
 
-const Cart = mongoose.model('Cart', cartSchema);
-module.exports=Cart;   
+const Order_2 = mongoose.model('Order_2', order_2Schema);
+module.exports=Order_2;   
