@@ -60,7 +60,7 @@
                               <div class="tab-content">
                                   <div class="tab-pane fade show active" id="nav-dashboard" role="tabpanel">
                                       <div class="axil-dashboard-overview">
-                                          <div class="welcome-text">Hello Annie (not <span>Annie?</span> <a href="sign-in.html">Log Out</a>)</div>
+                                          <div class="welcome-text">Hello <%=user_data.username%> (not <span><%=user_data.username%>?</span> <a href="/front/logout">Log Out</a>)</div>
                                           <p>From your account dashboard you can view your recent orders, manage your shipping and billing addresses, and edit your password and account details.</p>
                                       </div>
                                   </div>
@@ -70,49 +70,32 @@
                                               <table class="table">
                                                   <thead>
                                                       <tr>
-                                                          <th scope="col">Order</th>
+                                                          <th scope="col">Order_id</th>
                                                           <th scope="col">Date</th>
+                                                          <th scope="col">Payment method</th>
                                                           <th scope="col">Status</th>
                                                           <th scope="col">Total</th>
                                                           <th scope="col">Actions</th>
                                                       </tr>
                                                   </thead>
                                                   <tbody>
+                                                  <%  order_1.forEach((data)=>{   %>
                                                       <tr>
-                                                          <th scope="row">#6523</th>
-                                                          <td>September 10, 2020</td>
-                                                          <td>Processing</td>
-                                                          <td>$326.63 for 3 items</td>
-                                                          <td><a href="#" class="axil-btn view-btn">View</a></td>
+                                                          <th scope="row">#<%=data._id%></th>
+                                                          <td><%=data.orderDate%></td>
+                                                          <% if (data.payment == 1) { %>
+                                                            <td>Cash on Delivery</td>
+                                                          <% } else { %>
+                                                            <td>Online Payment</td>
+                                                          <% } %>
+                                                          <td>Pending</td>
+                                                          <td><%=data.total_ammount%></td>
+                                                          <td><a href="/front/view_order/<%=data._id%>" class="axil-btn view-btn">View Order</a></td>
                                                       </tr>
-                                                      <tr>
-                                                          <th scope="row">#6523</th>
-                                                          <td>September 10, 2020</td>
-                                                          <td>On Hold</td>
-                                                          <td>$326.63 for 3 items</td>
-                                                          <td><a href="#" class="axil-btn view-btn">View</a></td>
-                                                      </tr>
-                                                      <tr>
-                                                          <th scope="row">#6523</th>
-                                                          <td>September 10, 2020</td>
-                                                          <td>Processing</td>
-                                                          <td>$326.63 for 3 items</td>
-                                                          <td><a href="#" class="axil-btn view-btn">View</a></td>
-                                                      </tr>
-                                                      <tr>
-                                                          <th scope="row">#6523</th>
-                                                          <td>September 10, 2020</td>
-                                                          <td>Processing</td>
-                                                          <td>$326.63 for 3 items</td>
-                                                          <td><a href="#" class="axil-btn view-btn">View</a></td>
-                                                      </tr>
-                                                      <tr>
-                                                          <th scope="row">#6523</th>
-                                                          <td>September 10, 2020</td>
-                                                          <td>Processing</td>
-                                                          <td>$326.63 for 3 items</td>
-                                                          <td><a href="#" class="axil-btn view-btn">View</a></td>
-                                                      </tr>
+                                                     <% })%>
+                                                    
+                                                     
+                                                     
                                                   </tbody>
                                               </table>
                                           </div>

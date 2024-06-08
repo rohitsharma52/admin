@@ -1,11 +1,11 @@
 <%- include('../front/common/header') %>
 <main class="main-wrapper">
-          <% if (success_msg) { %>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                      <%= success_msg %>
-                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                  <% } %>
+    <% if (success_msg && success_msg.length > 0) { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <%= success_msg %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% } %>
           <!-- Start Shop Area  -->
           <div class="axil-single-product-area axil-section-gap pb--0 bg-color-white">
               <div class="single-product-thumb mb--40">

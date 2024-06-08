@@ -134,7 +134,7 @@ router.post('/login', (req, res, next) => {
       req.logIn(user, (err) => {
         if (err) { return next(err); }
         req.flash('success_msg', 'You are now logged in');
-        return res.redirect('/front/view_address')
+        return res.redirect('/front/index')
       });
     })(req, res, next);
   });
@@ -256,6 +256,7 @@ router.post('/order_1', async (req, res) => {
     }));
 
     await Order_2.insertMany(order2Entries);
+    await Cart.deleteMany({ user_id: user_id });
     req.flash('success_msg', 'your order comfirm');
     res.redirect('/front/index');
   } catch (err) {
@@ -263,11 +264,12 @@ router.post('/order_1', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-router.get('/my_account',auth.cart_count,auth.islogin,async(req,res)=>{
+router.get('/my_account',auth.islogin,auth.cart_count,auth.islogin,async(req,res)=>{
   const user_id=req.user.id
   try{
     const user_data= await Register.findOne({_id:user_id})
-    res.render('front/my_account',{user_data:user_data})
+    const order_1=await Order_1.find({user_id:user_id})
+    res.render('front/my_account',{user_data:user_data,order_1:order_1})
 
   }
   catch (err) {
@@ -284,4 +286,15 @@ router.get('/logout', (req, res) => {
     res.redirect('/front/login');
   });
 });
+router.get('/view_order/:id',async(req,res)=>{
+  const order_id=req.params.id
+  try{
+
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+
+})
 module.exports=router;
