@@ -264,7 +264,7 @@ router.post('/order_1', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-router.get('/my_account',auth.islogin,auth.cart_count,auth.islogin,async(req,res)=>{
+router.get('/my_account',auth.islogin,auth.cart_count,async(req,res)=>{
   const user_id=req.user.id
   try{
     const user_data= await Register.findOne({_id:user_id})
@@ -286,10 +286,20 @@ router.get('/logout', (req, res) => {
     res.redirect('/front/login');
   });
 });
-router.get('/view_order/:id',async(req,res)=>{
+router.get('/view_order/:id',auth.cart_count,async(req,res)=>{
   const order_id=req.params.id
-  try{
-
+  try {
+    const order_data = await Order_2.find({ orderId: order_id });
+    const all_data = await Promise.all(order_data.map(async (data) => {
+      const product_data = await Product.findById(data.productId);
+      const quantity = data.quantity;
+      return {
+        product_data,
+        quantity
+      };
+    }));
+    console.log(all_data)
+    res.render('front/view_order', { all_data });
   }
   catch (err) {
     console.error(err);
