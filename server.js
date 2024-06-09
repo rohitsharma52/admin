@@ -10,6 +10,9 @@ const passport=require('passport');
 const flash = require('connect-flash');
 const session = require('express-session');
 const slider=require('./auth.js')
+require('dotenv').config();
+
+const PORT = process.env.PORT || 3000;
 
 app.use(session({
           secret: 'your_secret_key',
@@ -50,8 +53,8 @@ app.use(slider.fetchSliderData);
 
 
 
-
-app.listen(3000,()=>{
-          console.log('server is runing on port 3000');
-        })
+const port = process.env.PORT || 3000; 
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 
