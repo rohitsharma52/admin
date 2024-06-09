@@ -134,7 +134,7 @@ router.post('/login', (req, res, next) => {
       req.logIn(user, (err) => {
         if (err) { return next(err); }
         req.flash('success_msg', 'You are now logged in');
-        return res.redirect('/front/view_address')
+        return res.redirect('/front/home')
       });
     })(req, res, next);
   });
