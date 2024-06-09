@@ -4,6 +4,7 @@ const auth=require('../../auth.js')
 const upload=require('../../file_upload.js')
 const Category=require('../../model/admin/category_model.js');
 const Product=require('../../model/admin/product_model.js')
+const Order_1=require('../../model/admin/order_1.js')
 
 /////////////////////////// category route//////////////////////////////////
 router.get('/add_category',auth.fetchSliderData,(req,res)=>{
@@ -155,6 +156,13 @@ router.post('/update_product/:id', upload.array('images', 4), async (req, res) =
       console.error(err);
       res.status(500).send('Internal Server Error');
   }
+});
+router.get('/all_orders',auth.fetchSliderData,async(req,res)=>{
+
+const get_data=await Order_1.find().exec()
+
+
+res.render('order/all_orders',{get_data:get_data})
 });
 
  module.exports=router;
