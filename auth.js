@@ -103,7 +103,6 @@ function isAuthenticated(req, res, next) {
     }
      };   
      const addToCart = async (req, res, next) => {
-      console.log('good job');
       try {
         const userId = req.user._id;
         
@@ -128,11 +127,25 @@ function isAuthenticated(req, res, next) {
         res.status(500).json({ error: 'Internal Server Error' });
       }
     };
+    // Middleware to restore session cart data if guest user
+const restoreGuestCart = (req, res, next) => {
+  console.log('hello this middel where')
+  if (!req.isAuthenticated()) { 
+    if (Array.isArray(req.session.cart) && req.session.cart.length > 0) { // If session cart data exists
+      // Redirect to /front/shop if session cart data doesn't exist
+      return;// Clear session cart data
+    } else {
+      res.redirect('/front/shop');
+    }
+  }
+  next(); // Move to next middleware
+};
+
     
 
 
 
 
 module.exports={
-          isAuthenticated,LocalStrategy,fetchSliderData,cart_count,islogin,addToCart
+          isAuthenticated,LocalStrategy,fetchSliderData,cart_count,islogin,addToCart,restoreGuestCart
 }        

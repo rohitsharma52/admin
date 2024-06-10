@@ -119,7 +119,7 @@
                                       <span class="price"><%= best_dealis[0].price %></span>
                                   </div>
                                   <div class="shop-btn">
-                                      <a href="shop.html" class="axil-btn btn-bg-primary btn-size-md"><i class="far fa-shopping-cart"></i> View All Items</a>
+                                      <a href="/front/shop" class="axil-btn btn-bg-primary btn-size-md"><i class="far fa-shopping-cart"></i> View All Items</a>
                                   </div>
                                   <div class="plus-btn">
                                       <a href="#" class="plus-icon"><i class="far fa-plus"></i></a>
@@ -136,15 +136,13 @@
                               <div class="col-md-6">
                                   <div class="product-collection-three">
                                       <div class="collection-content">
-                                          <h6 class="title"><a href="shop.html"><%=best.name%></a></h6>
+                                          <h6 class="title"><a href="/front/product_details/<%=best._id%>"><%=best.name%></a></h6>
                                           <div class="price-warp">
                                               <span class="price-text">Starting From</span>
                                               <span class="price"><%=best.price%></span>
                                           </div>
                                       </div>
-                                      <div class="collection-thumbnail">
                                           <img src="<%= best.images[0] %>" alt="Product">
-                                      </div>
                                   </div>
                               </div>
                             <% })   %>  
@@ -158,7 +156,7 @@
               <div class="container">
                   <div class="section-title-border">
                       <h2 class="title">Explore Our Products 💥</h2>
-                      <div class="view-btn"><a href="shop.html">View All Products</a></div>
+                      <div class="view-btn"><a href="/front/shop">View All Products</a></div>
                   </div>
                   <div class="row">
                     <% exploreProduct.forEach(function(ex_data){ %>
@@ -191,7 +189,7 @@
                                               </li>
                                           </ul>
                                       </div>
-                                      <h5 class="title"><a href="single-product-8.html"><%=ex_data.name %></a></h5>
+                                      <h5 class="title"><a href="/front/product_details/<%=ex_data._id%>"><%=ex_data.name %></a></h5>
                                       <div class="product-rating">
                                           <span class="icon">
                                       <i class="fas fa-star"></i>
@@ -275,7 +273,7 @@
                       <h2 class="title">Our Mega Collections 💥</h2>
                   </div>
                   <div class="row">
-                      <div class="col-xl-7">
+                      <div class="col-xl-6">
                           <div class="product-collection">
                               <div class="collection-content">
                                   <h3 class="title">Explore The <br> Sunglass</h3>
@@ -299,7 +297,7 @@
                               </div>
                           </div>
                       </div>
-                      <div class="col-xl-5 col-lg-6">
+                      <div class="col-xl-6 col-lg-6">
                           <div class="product-collection">
                               <div class="collection-content">
                                   <h3 class="title">Inspire <br> Creativity</h3>
@@ -320,7 +318,9 @@
                               </div>
                           </div>
                       </div>
-                      <div class="col-xl-5 col-lg-6">
+                      </div>
+                      <div class="row">
+                      <div class="col-xl-6 col-lg-6">
                           <div class="product-collection">
                               <div class="collection-content">
                                   <h3 class="title">Trade
@@ -340,7 +340,7 @@
                               </div>
                           </div>
                       </div>
-                      <div class="col-xl-7">
+                      <div class="col-xl-6">
                           <div class="product-collection">
                               <div class="collection-content">
                                   <h3 class="title">Find A Great
@@ -362,6 +362,7 @@
                                   </div>
                               </div>
                           </div>
+                      </div>
                       </div>
                   </div>
               </div>
@@ -389,7 +390,7 @@
                               <div class="col-md-6 col-12">
                                   <div class="axil-product product-style-eight product-list-style-3">
                                       <div class="thumbnail">
-                                          <a href="single-product-8.html">
+                                          <a href="/front/product_details/<%=week_data._id%>">
                                               <img class="main-img" src="<%=week_data.images[0]%>" alt="Product Images">
                                           </a>
                                       </div>
@@ -412,7 +413,7 @@
                                                       </li>
                                                   </ul>
                                               </div>
-                                              <h5 class="title"><a href="single-product-8.html"><%=week_data.name%></a></h5>
+                                              <h5 class="title"><a href="/front/product_details/<%=week_data._id%>"><%=week_data.name%></a></h5>
                                               <div class="product-rating">
                                                   <span class="icon">
                                               <i class="fas fa-star"></i>

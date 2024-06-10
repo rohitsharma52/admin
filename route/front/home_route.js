@@ -134,7 +134,7 @@ router.post('/login', (req, res, next) => {
       req.logIn(user, (err) => {
         if (err) { return next(err); }
         req.flash('success_msg', 'You are now logged in');
-        return res.redirect('/front/index')
+        return res.redirect('/front/view_address')
       });
     })(req, res, next);
   });
@@ -174,7 +174,7 @@ router.get('/product_details/:id',auth.cart_count,async(req,res)=>{
     res.status(500).send('Internal Server Error');
 }
 });
-router.get('/view_address',auth.cart_count,auth.islogin,auth.addToCart,async(req,res)=>{
+router.get('/view_address',auth.cart_count,auth.islogin,auth.restoreGuestCart,auth.addToCart,async(req,res)=>{
   const user_id=req.user.id 
 try{
 const add_data=await Address.find({user_id:user_id}).exec()
