@@ -49,7 +49,7 @@
                                         <% get_data.forEach(function(data) { %>
                                           <tr>
                                             <td><%= a %></td> <!-- Display counter variable -->
-                                            <!-- <td><%= data.name %></td> -->
+                                            <td><%= data.username %></td>
                                             <% if (data.payment == 1) { %>
                                                   <td>Cash on Delivery</td>
                                                 <% } else { %>
@@ -59,7 +59,7 @@
                                             <td><%= data.orderDate %></td>
                                            
                                             <td style="display:flex;margin-top: 2rem;">
-                                        <a href="/admin/update_category/<%= data._id%>" class="btn btn-info">update</a>
+                                        <a href="/front/view_order/<%= data._id%>" class="btn btn-info">view</a>
                                             </td> 
                                           </tr>
                                           <% a++; %> <!-- Increment counter variable -->

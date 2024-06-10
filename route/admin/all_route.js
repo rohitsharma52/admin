@@ -5,6 +5,8 @@ const upload=require('../../file_upload.js')
 const Category=require('../../model/admin/category_model.js');
 const Product=require('../../model/admin/product_model.js')
 const Order_1=require('../../model/admin/order_1.js')
+const Register=require('../../model/admin/login_model.js')
+const Order_2=require('../../model/admin/order2_model.js')
 
 /////////////////////////// category route//////////////////////////////////
 router.get('/add_category',auth.fetchSliderData,(req,res)=>{
@@ -159,10 +161,41 @@ router.post('/update_product/:id', upload.array('images', 4), async (req, res) =
 });
 router.get('/all_orders',auth.fetchSliderData,async(req,res)=>{
 
-const get_data=await Order_1.find().exec()
-
-
-res.render('order/all_orders',{get_data:get_data})
+  try {
+    const orders = await Order_1.find().exec();
+    const get_data = await Promise.all(orders.map(async (order) => {
+        const user = await Register.findById(order.user_id).select('username').exec();
+        return {
+            ...order._doc,
+            username: user ? user.username : 'Unknown User'
+        };
+    }));
+    res.render('order/all_orders',{get_data:get_data})
+} 
+catch (err) {
+  console.error(err);
+  res.status(500).send('Internal Server Error');
+}
 });
+router.get('/view_order/:id',auth.fetchSliderData,async(req,res)=>{
+  const order_id=req.params.id
+  try {
+    const order_data = await Order_2.find({ orderId: order_id });
+    const all_data = await Promise.all(order_data.map(async (data) => {
+      const product_data = await Product.findById(data.productId);
+      const quantity = data.quantity;
+      return {
+        product_data,
+        quantity
+      };
+    }));
+    res.render('order/view_order', { all_data });
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+
+})
 
  module.exports=router;
