@@ -125,19 +125,33 @@ catch (err) {
 }
 }) 
 router.post('/login', (req, res, next) => {
-    passport.authenticate('local-user', (err, user, info) => {
+  let tempCart = null; // Initialize tempCart outside the authentication block
+
+  passport.authenticate('local-user', (err, user, info) => {
+      if (req.session.cart && req.session.cart.length > 0) {
+          tempCart = req.session.cart; // Save session cart to a temporary variable
+      }
+
       if (err) { return next(err); }
       if (!user) {
-        req.flash('error_msg', info.message);
-        return res.redirect('/front/login');
+          req.flash('error_msg', info.message);
+          return res.redirect('/front/login');
       }
+
       req.logIn(user, (err) => {
-        if (err) { return next(err); }
-        req.flash('success_msg', 'You are now logged in');
-        return res.redirect('/front/view_address')
+          if (err) { return next(err); }
+
+          // Restore session cart after login
+          if (tempCart) {
+              req.session.cart = tempCart;
+          }
+
+          req.flash('success_msg', 'You are now logged in');
+          return res.redirect('/front/view_address');
       });
-    })(req, res, next);
-  });
+  })(req, res, next);
+});
+
   router.post('/update_quantity/:id', (req, res) => {
     const productId = req.params.id;
     const { quantity } = req.body;
@@ -174,7 +188,7 @@ router.get('/product_details/:id',auth.cart_count,async(req,res)=>{
     res.status(500).send('Internal Server Error');
 }
 });
-router.get('/view_address',auth.cart_count,auth.islogin,auth.restoreGuestCart,auth.addToCart,async(req,res)=>{
+router.get('/view_address',auth.cart_count,auth.islogin,auth.addToCart,async(req,res)=>{
   const user_id=req.user.id 
 try{
 const add_data=await Address.find({user_id:user_id}).exec()
@@ -202,7 +216,7 @@ router.post('/add_address',async(req,res)=>{
     res.status(500).send('Internal Server Error');
 }
 });
-router.get('/checkout/:id',auth.cart_count,auth.islogin,async(req,res)=>{
+router.get('/checkout/:id',auth.cart_count,auth.islogin,auth.restoreGuestCart,async(req,res)=>{
   const id=req.params.id
   const user_id=req.user.id
   try{
@@ -298,7 +312,6 @@ router.get('/view_order/:id',auth.cart_count,async(req,res)=>{
         quantity
       };
     }));
-    console.log(all_data)
     res.render('front/view_order', { all_data });
   }
   catch (err) {

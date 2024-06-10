@@ -104,23 +104,13 @@ function isAuthenticated(req, res, next) {
      };   
      const addToCart = async (req, res, next) => {
       try {
-        const userId = req.user._id;
-        
-        // Loop through each product in session cart
-        for (const cartItem of req.session.cart) {
-          // Create a new instance of CartItem
-          const newCartItem = new Cart({
-            user_id: userId,
-            product_id: cartItem.product_id,
-            quantity: cartItem.quantity
-          });
-          await newCartItem.save();
-        }
-        
-        // Clear session data
-        req.session.cart = [];
-        
+        if (req.session.cart && req.session.cart.length > 0) {
+       
         next();
+      }else {
+        req.flash('error', 'Your cart is empty.');
+        res.redirect('/front/shop');
+    }
       } catch (error) {
         // Handle error
         console.error('Error adding to cart:', error);
@@ -128,18 +118,31 @@ function isAuthenticated(req, res, next) {
       }
     };
     // Middleware to restore session cart data if guest user
-const restoreGuestCart = (req, res, next) => {
-  console.log('hello this middel where')
-  if (!req.isAuthenticated()) { 
-    if (Array.isArray(req.session.cart) && req.session.cart.length > 0) { // If session cart data exists
-      // Redirect to /front/shop if session cart data doesn't exist
-      return;// Clear session cart data
-    } else {
-      res.redirect('/front/shop');
-    }
-  }
-  next(); // Move to next middleware
-};
+    const restoreGuestCart = async (req, res, next) => {
+      try {
+        if (req.session.cart && req.session.cart.length > 0) {
+          const userId = req.user._id;
+          const cartItems = req.session.cart.map(cartItem => ({
+            user_id: userId,
+            product_id: cartItem.product_id,
+            quantity: cartItem.quantity
+          }));
+          
+          await Cart.insertMany(cartItems); // Insert multiple cart items at once
+          
+          req.session.cart = []; // Clear the session cart
+          return next(); // Proceed to the next middleware or route handler
+        } else {
+          req.flash('error', 'Your cart is empty.');
+          return res.redirect('/front/shop');
+        }
+      } catch (error) {
+        // Handle error
+        console.error('Error adding to cart:', error);
+        req.flash('error', 'There was an error processing your cart.');
+        return res.redirect('/front/shop');
+      }
+    };
 
     
 
