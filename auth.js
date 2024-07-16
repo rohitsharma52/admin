@@ -143,12 +143,6 @@ function isAuthenticated(req, res, next) {
         return res.redirect('/front/shop');
       }
     };
-
-    
-
-
-
-
 module.exports={
           isAuthenticated,LocalStrategy,fetchSliderData,cart_count,islogin,addToCart,restoreGuestCart
 }        

@@ -64,8 +64,6 @@ router.post('/old_register', upload.single('image'), async(req, res) => {
   }
 });
 
-
-
  router.post('/delete_user',async(req,res)=>{
 const id=req.body.userId;
 try{
